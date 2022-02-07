@@ -134,6 +134,7 @@ class PicturePreviewActivity : AppCompatActivity() {
     lateinit var textView: TextView
     var send: SendTo? = null
     lateinit var imageString : String
+    lateinit var userLocation : LocationDetails
 
     companion object {
         var pictureResult: PictureResult? = null
@@ -174,7 +175,7 @@ class PicturePreviewActivity : AppCompatActivity() {
         if (item.itemId == R.id.share) {
             encodeImage()
             sendDummySOS()
-            Location().sendLocationSOS()
+
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -198,7 +199,11 @@ class PicturePreviewActivity : AppCompatActivity() {
     private fun sendDummySOS() {
         Log.e("PicturePreviewActivity", "sendDummySOS: Called")
         val apiService = RestApiService()
-        val userInfo = UserInfo(phoneNumbers = arrayOf("090909090", "090909090"), image = imageString, location = LocationDetails(latitude = "3.77772222", longitude = "0.99900033"))
+        Location().sendLocationSOS()
+
+
+        val userInfo = UserInfo(phoneNumbers = arrayOf("090909090", "090909090"),
+            image = imageString, location = userLocation)
 //        Log.e("PicturePreviewActivity", "sendDummySOS: userInfo $userInfo")
         Log.e("PicturePreviewActivity", "sendDummySOS: userInfo ${userInfo.phoneNumbers?.get(1)}")
         Log.e("PicturePreviewActivity", "sendDummySOS: userInfo ${userInfo.location.latitude}")
