@@ -58,17 +58,17 @@ class PicturePreviewActivity : AppCompatActivity() {
             imageView.setImageDrawable(ColorDrawable(Color.GREEN))
             Toast.makeText(this, "Can't preview this format: " + result.getFormat(), Toast.LENGTH_LONG).show()
         }
-        if (result.isSnapshot) {
-            // Log the real size for debugging reason.
-            val options = BitmapFactory.Options()
-            options.inJustDecodeBounds = true
-            BitmapFactory.decodeByteArray(result.data, 0, result.data.size, options)
-            if (result.rotation % 180 != 0) {
-                Log.e("PicturePreview", "The picture full size is ${result.size.height}x${result.size.width}")
-            } else {
-                Log.e("PicturePreview", "The picture full size is ${result.size.width}x${result.size.height}")
-            }
-        }
+//        if (result.isSnapshot) {
+//            // Log the real size for debugging reason.
+//            val options = BitmapFactory.Options()
+//            options.inJustDecodeBounds = true
+//            BitmapFactory.decodeByteArray(result.data, 0, result.data.size, options)
+//            if (result.rotation % 180 != 0) {
+//                Log.e("PicturePreview", "The picture full size is ${result.size.height}x${result.size.width}")
+//            } else {
+//                Log.e("PicturePreview", "The picture full size is ${result.size.width}x${result.size.height}")
+//            }
+//        }
     }
 
     override fun onDestroy() {
@@ -93,33 +93,7 @@ class PicturePreviewActivity : AppCompatActivity() {
 
             SendTo().sendToServer()
 
-//            val intent = Intent(this, CameraActivity::class.java)
-//            startActivity(intent)
-//
 
-
-//            val extension = when (pictureResult!!.format) {
-//                PictureFormat.JPEG -> "jpg"
-//                PictureFormat.DNG -> "dng"
-//                else -> throw RuntimeException("Unknown format.")
-//            }
-//            val file = File(filesDir, "picture.$extension")
-//            CameraUtils.writeToFile(pictureResult!!.data, file) { file ->
-//                if (file != null) {
-//                    val context = this@PicturePreviewActivity
-//                    val intent = Intent(Intent.ACTION_SEND)
-//                    intent.type = "image/*"
-//                    val uri = FileProvider.getUriForFile(context,
-//                            context.packageName + ".provider", file)
-//                    intent.putExtra(Intent.EXTRA_STREAM, uri)
-//                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-//                    startActivity(intent)
-//                } else {
-//                    Toast.makeText(this@PicturePreviewActivity,
-//                            "Error while writing file.",
-//                            Toast.LENGTH_SHORT).show()
-//                }
-//            }
             return true
         }
         return super.onOptionsItemSelected(item)
