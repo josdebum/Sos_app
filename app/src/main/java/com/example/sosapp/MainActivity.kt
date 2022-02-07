@@ -5,6 +5,7 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.constraintlayout.motion.widget.Debug.getLocation
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val buttonClick = findViewById<Button>(R.id.button)
+        val buttonClick = findViewById<ImageButton>(R.id.button)
         buttonClick.setOnClickListener {
 
            // getLocation()

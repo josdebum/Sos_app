@@ -1,18 +1,15 @@
 package com.example.sosapp
 
+import android.opengl.ETC1.encodeImage
 import com.google.gson.annotations.SerializedName
 
-
-fun addDummyUser() {
-    var image: String
-    var latitude: String
-    var longitude: String
-
+fun addDummyUser(image: String, Latitude: String?, longitude: String?) {
 
     val userInfo = UserInfo(
         PhoneNumbers= arrayOf("080333333333", "080444444444"),
-        Image = "base_64",
+        Image = "n h.",
         Location = LocationDetails("",""))
+
 }
 
 data class UserInfo (
@@ -27,3 +24,4 @@ class LocationDetails(
     @SerializedName("latitude") val Latitude: String?,
     @SerializedName("longitude") val Longitude: String?,
 )
+

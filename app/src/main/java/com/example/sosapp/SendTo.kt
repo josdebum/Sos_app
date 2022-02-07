@@ -1,8 +1,6 @@
 package com.example.sosapp
 
-import android.content.Intent
 import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
@@ -10,17 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SendTo () {
 
     fun sendToServer (){
-        println("Send to server called")
 
         val image : String
     // Create Retrofit
@@ -29,6 +23,7 @@ class SendTo () {
         .build()
 
     val service = retrofit.create(APIService::class.java)
+
 
         val jsonObjectString= addDummyUser().toString()
 
@@ -47,7 +42,7 @@ class SendTo () {
                     val prettyJson = gson.toJson(
                         JsonParser.parseString(
                             response.body()
-                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                                ?.string()
                         )
                     )
 
