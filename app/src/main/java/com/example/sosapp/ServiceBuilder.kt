@@ -9,7 +9,7 @@ object ServiceBuilder {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://dummy.restapiexample.com") // change this IP for testing by your actual machine IP
-//        .baseUrl("https://jsonplaceholder.typicode.com") // change this IP for testing by your actual machine IP
+
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
