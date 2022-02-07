@@ -68,20 +68,20 @@ class PicturePreviewActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.share) {
 
-            encodeImage()
 
 
             Toast.makeText(this, "Scene details sent successfully", Toast.LENGTH_SHORT).show()
 
-            SendTo().sendToServer()
-
+          EncodeImage()
+            SendTo()
 
             return true
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun encodeImage() {
+    fun EncodeImage() {
+        val image: String
 
         val imageView = findViewById<ImageView>(R.id.image)
 
@@ -90,9 +90,10 @@ class PicturePreviewActivity : AppCompatActivity() {
         val baos = ByteArrayOutputStream()
         mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val imageBytes = baos.toByteArray()
-        var image = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+            image = Base64.encodeToString(imageBytes, Base64.DEFAULT)
 
-       //  image = addDummyUser(image)
+
+       //  image = addDummyUser(image = )
 
 
     }
