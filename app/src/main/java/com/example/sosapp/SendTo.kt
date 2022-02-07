@@ -3,14 +3,18 @@ package com.example.sosapp
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat.startActivity
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SendTo () {
@@ -24,42 +28,38 @@ class SendTo () {
         .baseUrl("https://dummy.restapiexample.com")
         .build()
 
-    // Create Service
     val service = retrofit.create(APIService::class.java)
 
-    // Create JSON using JSONObject
+        val jsonObjectString= addDummyUser().toString()
 
-//    val locationObject = JSONObject()
-//    locationObject.put ("latitude", "90")
-//    locationObject.put ("longitude", "67")// Host object
+        // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
+        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-    val jsonObject = JSONObject()
-    jsonObject.put("phoneNumbers", "080333333333")
-    jsonObject.put("location",  "65")
+        CoroutineScope(Dispatchers.IO).launch {
+            // Do the POST request and get response
+            val response = service.createEmployee(requestBody)
 
-    // Convert JSONObject to String
-    val jsonObjectString = jsonObject.toString()
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
 
-    // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
-    val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
 
-    CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-        Log.e ("Error", jsonObjectString)
-        // Do the POST request and get response
-        val response = service.sendSceneDetails(requestBody)
+                } else {
 
-        withContext(Dispatchers.Main) {
-            if (response.isSuccessful) {
-      Log.e("Pretty Printed JSON :", response.message())
-                print ("I am done")
+                    Log.e("RETROFIT_ERROR", response.code().toString())
 
-            } else {
-                Log.e("Error Printed:", response.body().toString())
-
-                Log.e("RETROFIT_ERROR", response.code().toString())
-
+                }
             }
         }
-    }
+
+
 }}

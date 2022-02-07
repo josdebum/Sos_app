@@ -10,8 +10,7 @@ import retrofit2.http.POST
 interface APIService {
 
     @POST("/api/v1/create")
-    suspend fun sendSceneDetails(@Body requestBody: RequestBody): Response<ResponseBody>
-
+    suspend fun createEmployee(@Body requestBody: RequestBody): Response<ResponseBody>
 }
 
 
