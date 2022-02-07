@@ -3,9 +3,6 @@ package com.example.sosapp
 import com.google.gson.annotations.SerializedName
 
 
-
-
-
 fun addDummyUser() {
     var image: String
     var latitude: String
@@ -16,9 +13,7 @@ fun addDummyUser() {
         PhoneNumbers= arrayOf("080333333333", "080444444444"),
         Image = "base_64",
         Location = LocationDetails("",""))
-
 }
-
 
 data class UserInfo (
 
