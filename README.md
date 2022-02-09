@@ -6,18 +6,14 @@ Here is what the app would do:
 1. Take a picture of the scene, encode it to base64 string
 2. In real time, acquire the current location on the click of the capture image button
 3. Send this information with preconfigured SOS numbers (i.e that of your family members or the police) via a REST endpoint (endpoint will be provided). 
-<br>
 
 ## ✨ Features
 * CameraView [OpenWeather API](https://github.com/natario1/CameraView)
 * Google Location API 
 * Retrofit
 
-<br>
-
 ## 📸 Screenshots
-| Splash Screen| Sign In Screen| 
 |------|-------|
-|<img src="Screenshot_20220209-132954.jpg" width="400">|<img src="Screenshot_20220209-132800.jpg" width="400">|
+|<img src="Screenshot_20220209-132954.jpg" width="300">|<img src="Screenshot_20220209-132800.jpg" width="300">|
 | Select Location Screen| Weather Screen|
-|<img src="Screenshot_20220209-132811.jpg" width="400">|<img src="Screenshot_20220209-132816.jpg" width="400">|
+|<img src="Screenshot_20220209-132811.jpg" width="300">|<img src="Screenshot_20220209-132816.jpg" width="300">|
