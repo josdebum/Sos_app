@@ -2,31 +2,54 @@
 package com.example.sosapp
 
 import RestApiService
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+
+import com.google.android.gms.location.*
 
 import com.otaliastudios.cameraview.PictureResult
-import com.otaliastudios.cameraview.size.AspectRatio
 import java.io.*
 
 
 class PicturePreviewActivity : AppCompatActivity() {
-    lateinit var textView: TextView
-    var send: SendTo? = null
+
+
+    val PERMISSION_ID = 42
+
     lateinit var imageString : String
-    lateinit var userLocation : LocationDetails
+
+    private lateinit var mLastLocation: Location
+ var locationLatitude: String ? = null
+    var locationLongitude: String? = null
+
+
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
+
+ //lateinit var mfusedLocationClient: FusedLocationProviderClient
+
+
 
     companion object {
         var pictureResult: PictureResult? = null
@@ -41,8 +64,7 @@ class PicturePreviewActivity : AppCompatActivity() {
         }
         val imageView = findViewById<ImageView>(R.id.image)
 
-        val delay = intent.getLongExtra("delay", 0)
-        val ratio = AspectRatio.of(result.size)
+
         try {
             result.toBitmap(1000, 1000) { bitmap -> imageView.setImageBitmap(bitmap) }
         } catch (e: UnsupportedOperationException) {
@@ -66,7 +88,11 @@ class PicturePreviewActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.share) {
             encodeImage()
+            getLastLocation()
             sendDummySOS()
+
+            Toast.makeText(this, "Scene details sent successfully " , Toast.LENGTH_LONG).show()
+
 
             return true
         }
@@ -76,26 +102,121 @@ class PicturePreviewActivity : AppCompatActivity() {
     private fun encodeImage() {
         Log.e("PicturePreviewActivity", "encodeImage: called")
         val imageView = findViewById<ImageView>(R.id.image)
-//        var imageString: String
+
         imageView.drawable?.let {
             val mBitmap = (it as BitmapDrawable).bitmap
             val baos = ByteArrayOutputStream()
             mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 //        val imageBytes = baos.toByteArray()
             imageString = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
-//            println("imageString == $imageString")
-//            Log.e("PicturePreviewActivity", "encodeImage: imageString == $imageString"
+
         }
     }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+
+//        if (checkPermissions()) {
+//            if (isLocationEnabled()) {
+
+        Log.e("PicturePreviewActivity", "getlastlocation: called")
+
+        mFusedLocationClient?.lastLocation
+            ?.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful && task.result != null) {
+                    mLastLocation = task.result
+                    locationLatitude = (mLastLocation).latitude.toString()
+                    locationLongitude= (mLastLocation).longitude.toString()
+
+                    Log.e ("", locationLatitude!!)
+
+                } else {
+                    Log.w(ContentValues.TAG, "getLastLocation:exception", task.exception)
+                    //showMessage(getString(R.string.no_location_detected))
+                }
+            }
+
+//                mFusedLocationClient?.lastLocation?.addOnCompleteListener(this) { task ->
+//                    var location: Location? = task.result
+//                    if (location == null) {
+//                        requestNewLocationData()
+//                    } else {
+//                        locationLatitude = location.latitude.toString()
+//                        locationLongitude = location.longitude.toString()
+//                    }
+//                }
+//            } else {
+//                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
+//                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//                startActivity(intent)
+//            }
+//        } else {
+//            requestPermissions()
+//        }
+//    }
+           // }}}
+
+//private fun requestPermissions() {
+//    ActivityCompat.requestPermissions(
+//        this,
+//        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+//        PERMISSION_ID
+//    )
+//}
+//
+//
+//    private fun isLocationEnabled(): Boolean {
+//        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+//            LocationManager.NETWORK_PROVIDER
+//        )
+//    }
+//
+//    private fun checkPermissions(): Boolean {
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED &&
+//            ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            return true
+//        }
+//        return false
+//    }
+//
+//    @SuppressLint("MissingPermission")
+//    private fun requestNewLocationData() {
+//        var mLocationRequest = LocationRequest()
+//        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//        mLocationRequest.interval = 0
+//        mLocationRequest.fastestInterval = 0
+//        mLocationRequest.numUpdates = 1
+//
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//        Looper.myLooper()?.let {
+//            mFusedLocationClient!!.requestLocationUpdates(
+//                mLocationRequest, mLocationCallback,
+//                it
+//            )
+//        }
+//    }
+//    private val mLocationCallback = object : LocationCallback() {
+//        override fun onLocationResult(locationResult: LocationResult) {
+//            var mLastLocation: Location = locationResult.lastLocation
+//            locationLatitude = mLastLocation.latitude.toString()
+//            locationLongitude = mLastLocation.longitude.toString()
+//        }
+   }
 
     private fun sendDummySOS() {
         Log.e("PicturePreviewActivity", "sendDummySOS: Called")
         val apiService = RestApiService()
-        Location().sendLocationSOS()
-
 
         val userInfo = UserInfo(phoneNumbers = arrayOf("090909090", "090909090"),
-            image = imageString, location =  LocationDetails(latitude = "3.77772222", longitude = "0.99900033"))
+            image = imageString, location =  LocationDetails(latitude = locationLatitude, longitude = locationLongitude))
 //        Log.e("PicturePreviewActivity", "sendDummySOS: userInfo $userInfo")
         Log.e("PicturePreviewActivity", "sendDummySOS: userInfo ${userInfo.phoneNumbers?.get(1)}")
         Log.e("PicturePreviewActivity", "sendDummySOS: userInfo ${userInfo.location.latitude}")
@@ -104,4 +225,6 @@ class PicturePreviewActivity : AppCompatActivity() {
         apiService.sendSOS(userInfo)
 
     }
-}
+
+
+    }
