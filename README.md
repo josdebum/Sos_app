@@ -13,7 +13,5 @@ Here is what the app would do:
 * Retrofit
 
 ## 📸 Screenshots
-|------|-------|
-|<img src="Screenshot_20220209-132954.jpg" width="300">|<img src="Screenshot_20220209-132800.jpg" width="300">|
-| Select Location Screen| Weather Screen|
-|<img src="Screenshot_20220209-132811.jpg" width="300">|<img src="Screenshot_20220209-132816.jpg" width="300">|
+|<img src="Screenshot_20220209-132954.jpg" width="300">|   <img src="Screenshot_20220209-132800.jpg" width="300">|
+|<img src="Screenshot_20220209-132811.jpg" width="300">|   <img src="Screenshot_20220209-132816.jpg" width="300">|
